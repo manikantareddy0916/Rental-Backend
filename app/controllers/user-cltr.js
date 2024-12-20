@@ -3,6 +3,8 @@ const _ = require('lodash')
 const bcryptjs = require('bcryptjs')
 const {validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken')
+const transporter = require('../../config/nodeMailer')
+
 const userCltr = {}
 
 //Register
@@ -21,16 +23,52 @@ userCltr.register = async function (req,res){
         if(totalUsers == 0){
             user.role = 'admin'
         }
-        await user.save()
-        //creating so 201
-        res.status(201).json({msg:"Congratulations, You are registered! Check you email to sign in."})
+        const userSave =await user.save()
 
+        if(userSave){
+            console.log('uer',userSave)
+             //generating token for verification
+        // const token = jwt.sign({ id: userSave._id , role : userSave.role}, process.env.JWT_SECRET)
+        // console.log('2',token,'jj')
+        // const verificationLink =`${process.env.BACKEND_URL}/api/users/verify/${token}`
+
+      
+        //console.log('2.5',verificationLink)
+
+        const mailOptions = {
+            
+            from: process.env.NODE_MAILER_MAIL, // Sender email
+            to: userSave.email,//'k.s.nivas369@gmail.com',//userSave.email , // Newly registered user's email
+            subject: 'Email Verification',
+            html: `
+                <p>Hello,</p>
+                <p>Thank you for registering! Please click the following link to verify your email:</p>
+               
+                <p>Best regards,</p>
+            `
+        }
+    //    console.log('3',transporter)
+       //console.log('4',mailOptions)
+       
+        transporter.sendMail(mailOptions)
+        //console.log('last',data)
+        res.json({
+            userSave,
+            msg : `${userSave.userName}, Please Verify your email send to your email address to access your account`
+        })
+           
+        }
+        // console.log('send')
+        //creating so 201
+        // res.status(201).json({msg:"Congratulations, You are registered! Check you email to sign in."})
     }
     catch(e){
         //internal server error
+        console.log('error')
         res.status(500).json(e)
     }
 }
+
 //Login
 userCltr.login = async function (req,res){
     const errors = validationResult(req)

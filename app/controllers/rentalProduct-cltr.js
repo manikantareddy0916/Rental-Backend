@@ -2,6 +2,9 @@ const uploadToS3 = require('../middlewares/imageupload')
 const RentalProduct = require('../models/rentalProduct-model')
 const User = require('../models/user-model')
 const Address = require('../models/address-model')
+const transporter = require('../../config/nodeMailer')
+
+
 const rentalProductCltr = {}
 
 
@@ -28,14 +31,31 @@ rentalProductCltr.add = async function(req,res){
         const rentalProduct = new RentalProduct(body)
         rentalProduct.rentalUser =userid
         rentalProduct.product = pId
-        await rentalProduct.save()
-        //console.log('rentalProduct.rentalUser',rentalProduct.rentalUser)
-        //console.log('rentalDetails._id',rentalProduct._id)
+        const userSave = await rentalProduct.save()
+        //const populatedRentalProduct = await userSave.populate('productOwner').execPopulate();
+
         await User.findOneAndUpdate({_id: userid}, { $push: {rentalProducts: pId} })
-        //await User.findOneAndUpdate({_id: rentalProduct.rentalUser }, {$push: {rentalDetails : rentalProduct._id}})
-        // await User.findOneAndUpdate({$push: {requestsId : rentalProduct._id}})
-        //await User.findOneAndUpdate({products : pId}, {$push: {requestsId: rentalProduct._id}} )
-        //console.log('fff',rentalProduct)
+       
+
+        
+        // const mailOptions = {
+        //     from: process.env.NODE_MAILER_MAIL, // Sender email
+        //     to: 'manikantareddyyandapalli@gmail.com',//userSave.productOwnerEmail,//'k.s.nivas369@gmail.com',//userSave.email , // Newly registered user's email
+        //     subject: 'Email Verification',
+        //     html: `
+        //         <p>Hello,</p>
+        //         <p> You got a product Request from ${userSave.productOwnerEmail} check Your user Details ${userSave.aadhar[0].url} and mobileNumber ${userSave.mobileNumber}</p>
+               
+        //         <p>Best regards,</p>
+        //     `
+        // }
+        // transporter.sendMail(mailOptions)
+        // res.json({
+        //     userSave,
+        //     msg : ` Please Verify Rental User `
+        // })
+           
+          
         res.status(200).json(rentalProduct)
     }
     catch(e){

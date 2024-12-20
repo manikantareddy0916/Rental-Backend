@@ -1,7 +1,6 @@
 const Payment = require('../models/payment-model')
 const _ = require('lodash')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const transporter = require('../../config/nodemailer')
 
 const paymentCltr = {}
 

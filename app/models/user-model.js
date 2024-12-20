@@ -30,6 +30,7 @@ const userSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'Address'
     }],
+   
     profilePicture: String
 }, {timestamps: true})
 

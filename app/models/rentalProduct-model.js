@@ -29,7 +29,11 @@ const rentalProductModel = new Schema({
     mobileNumber : String,
     days : Number,
     startDate : Date,
-    endDate : Date
+    endDate : Date,
+    productOwnerEmail :  {
+        type : Schema.Types.ObjectId,
+        ref : 'User'
+    },
 }, {timestamps: true})
 
 const RentalProduct = model('RentalProduct',rentalProductModel)

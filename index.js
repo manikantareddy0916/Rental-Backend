@@ -28,7 +28,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 configureDB()
-//mani kanta host
+//mani kanta host trail code adding to git
 
 const upload = multer()
 

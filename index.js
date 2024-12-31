@@ -26,7 +26,8 @@ const paymentCltr = require('./app/controllers/payment-cltr')
 const port = 3666
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors(
+))
 configureDB()
 //mani kanta host trail code adding to git
 

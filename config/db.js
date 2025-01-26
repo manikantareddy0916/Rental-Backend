@@ -9,7 +9,7 @@ const configureDB = async()=>{
         console.log('connected to db')
     }
     catch(e){
-        console.log('error connecting to DB')
+        console.log('error not connecting to DB ')
     }
 }
 
